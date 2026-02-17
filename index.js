@@ -3,48 +3,56 @@ const CHAT_ID = process.env.CHAT_ID;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 async function generateAngularConcept() {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: "user",
-            parts: [
-              {
-                text: `
-Give me ONE advanced Angular concept.
-
-Format:
-Title
-Why it matters
-Detailed explanation
-Types (if any)
-Step-by-step implementation
-Code example
-Common mistakes
-Advanced insight
-
-Keep it under 3500 characters.
-No emojis.
-Use clean formatting for Telegram.
-Avoid very basic topics.
-                `
-              }
-            ]
-          }
-        ]
-      }),
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [
+                {
+                  text: `
+  Give me ONE advanced Angular concept.
+  
+  Format:
+  Title
+  Why it matters
+  Detailed explanation
+  Types (if any)
+  Step-by-step implementation
+  Code example
+  Common mistakes
+  Advanced insight
+  
+  Keep it under 3500 characters.
+  No emojis.
+  Avoid basic topics.
+                  `
+                }
+              ]
+            }
+          ]
+        }),
+      }
+    );
+  
+    const data = await response.json();
+  
+    // 🔍 Debug log
+    console.log("Gemini response:", JSON.stringify(data, null, 2));
+  
+    if (!data.candidates || !data.candidates.length) {
+      throw new Error("Gemini API did not return candidates.");
     }
-  );
-
-  const data = await response.json();
-  return data.candidates[0].content.parts[0].text;
-}
+  
+    return data.candidates[0].content.parts[0].text;
+  }
+  
 
 async function sendMessage(text) {
   await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
