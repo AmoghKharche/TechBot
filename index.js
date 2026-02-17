@@ -3,20 +3,19 @@ const CHAT_ID = process.env.CHAT_ID;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 async function generateAngularConcept() {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: `
+    try {
+      const response = await fetch(
+`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [
+                  {
+                    text: `
   Give me ONE advanced Angular concept.
   
   Format:
@@ -30,28 +29,35 @@ async function generateAngularConcept() {
   Advanced insight
   
   Keep it under 3500 characters.
-  No emojis.
   Avoid basic topics.
-                  `
-                }
-              ]
-            }
-          ]
-        }),
+  Use clean formatting.
+                    `
+                  }
+                ]
+              }
+            ]
+          })
+        }
+      );
+  
+      const data = await response.json();
+  
+      if (data.error) {
+        console.error("Gemini Error:", data.error);
+        return "Gemini API error. Check logs.";
       }
-    );
   
-    const data = await response.json();
+      if (!data.candidates?.length) {
+        return "No response generated today.";
+      }
   
-    // 🔍 Debug log
-    console.log("Gemini response:", JSON.stringify(data, null, 2));
+      return data.candidates[0].content.parts[0].text;
   
-    if (!data.candidates || !data.candidates.length) {
-      throw new Error("Gemini API did not return candidates.");
+    } catch (err) {
+      return "Failed to generate Angular concept today.";
     }
-  
-    return data.candidates[0].content.parts[0].text;
   }
+  
   
 
 async function sendMessage(text) {
@@ -71,3 +77,4 @@ async function main() {
 }
 
 main();
+
