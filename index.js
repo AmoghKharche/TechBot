@@ -34,8 +34,6 @@ async function generateAngularConcept() {
                     *Title*
                     
                     *Why it matters*
-                    - point
-                    - point
                     
                     *Detailed explanation*
                     - short points
@@ -94,7 +92,7 @@ async function generateAngularConcept() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           chat_id: CHAT_ID,
-          text: text.substring(0, 3500),
+          text: text,
           parse_mode: "Markdown"
         }),
       }
