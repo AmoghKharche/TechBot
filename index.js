@@ -5,7 +5,7 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 async function generateAngularConcept() {
     try {
       const response = await fetch(
-`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -15,27 +15,56 @@ async function generateAngularConcept() {
                 role: "user",
                 parts: [
                   {
-                    text: `
-  Give me ONE advanced Angular concept.
-  
-  Format:
-  Title
-  Why it matters
-  Detailed explanation
-  Types (if any)
-  Step-by-step implementation
-  Code example
-  Common mistakes
-  Advanced insight
-  
-  Keep it under 3500 characters.
-  Avoid basic topics.
-  Use clean formatting.
+                    ttext: `
+                    You are a senior Angular architect teaching a mid-level Angular developer.
+                    
+                    Give me ONE advanced Angular concept.
+                    
+                    IMPORTANT RULES:
+                    - Keep total response under 3000 characters.
+                    - Use SHORT paragraphs.
+                    - Use bullet points instead of long blocks.
+                    - Use Telegram Markdown formatting.
+                    - Wrap code examples inside triple backticks.
+                    - Do NOT use emojis.
+                    - Avoid basic topics.
+                    
+                    Structure:
+                    
+                    *Title*
+                    
+                    *Why it matters*
+                    - point
+                    - point
+                    
+                    *Detailed explanation*
+                    - short points
+                    
+                    *Types (if any)*
+                    
+                    *Step-by-step implementation*
+                    1.
+                    2.
+                    3.
+                    
+                    *Code example*
+                    \`\`\`ts
+                    // example
+                    \`\`\`
+                    
+                    *Common mistakes*
+                    
+                    *Advanced insight*
                     `
+                    
                   }
                 ]
               }
-            ]
+            ],
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 1200
+            }
           })
         }
       );
@@ -44,19 +73,17 @@ async function generateAngularConcept() {
   
       if (data.error) {
         console.error("Gemini Error:", data.error);
-        return "Gemini API error. Check logs.";
+        return "Gemini API error.";
       }
   
-      if (!data.candidates?.length) {
-        return "No response generated today.";
-      }
-  
-      return data.candidates[0].content.parts[0].text;
+      return data.candidates?.[0]?.content?.parts?.[0]?.text 
+        || "No response generated today.";
   
     } catch (err) {
       return "Failed to generate Angular concept today.";
     }
   }
+  
   
   
 
@@ -68,12 +95,14 @@ async function generateAngularConcept() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           chat_id: CHAT_ID,
-          text: text.substring(0, 4000) // Telegram limit
+          text: text.substring(0, 3500),
+          parse_mode: "Markdown"
         }),
       }
     );
   
     const data = await response.json();
+    console.log("Telegram response:", data);
   }
   
 
