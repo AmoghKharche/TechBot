@@ -1,7 +1,50 @@
-import fetch from "node-fetch";
-
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const CHAT_ID = process.env.CHAT_ID;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+async function generateAngularConcept() {
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: `
+Give me ONE advanced Angular concept.
+
+Format:
+Title
+Why it matters
+Detailed explanation
+Types (if any)
+Step-by-step implementation
+Code example
+Common mistakes
+Advanced insight
+
+Keep it under 3500 characters.
+No emojis.
+Use clean formatting for Telegram.
+Avoid very basic topics.
+                `
+              }
+            ]
+          }
+        ]
+      }),
+    }
+  );
+
+  const data = await response.json();
+  return data.candidates[0].content.parts[0].text;
+}
 
 async function sendMessage(text) {
   await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -9,37 +52,14 @@ async function sendMessage(text) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       chat_id: CHAT_ID,
-      text: text,
-      parse_mode: "Markdown"
+      text: text
     }),
   });
 }
 
-function buildDailyMessage() {
-  const today = new Date().toDateString();
-
-  return `
-🚀 *Daily Tech Growth* (${today})
-
-🅰️ Angular Focus:
-Learn how Change Detection works internally.
-
-🧠 Backend Concept:
-Deep dive into Event Loop in Node.js.
-
-📐 System Design:
-Understand Load Balancer vs Reverse Proxy.
-
-💻 Mini Task:
-Create a custom Angular directive today.
-
-🔥 Stay consistent. Compound knowledge daily.
-  `;
-}
-
 async function main() {
-  const message = buildDailyMessage();
-  await sendMessage(message);
+  const concept = await generateAngularConcept();
+  await sendMessage(concept);
 }
 
 main();
