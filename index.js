@@ -16,53 +16,61 @@ async function generateAngularConcept() {
                 parts: [
                   {
                     text: `
-                    You are a senior Angular architect teaching a mid-level Angular developer.
-                    
-                    Give me ONE advanced Angular concept.
-                    
-                    IMPORTANT RULES:
-                    - Keep total response under 3000 characters.
-                    - Use SHORT paragraphs.
-                    - Use bullet points instead of long blocks.
-                    - Use Telegram Markdown formatting.
-                    - Wrap code examples inside triple backticks.
-                    - Do NOT use emojis.
-                    - Avoid basic topics.
-                    
-                    Structure:
-                    
-                    *Title*
-                    
-                    *Why it matters*
-                    
-                    *Detailed explanation*
-                    - short points
-                    
-                    *Types (if any)*
-                    
-                    *Step-by-step implementation*
-                    1.
-                    2.
-                    3.
-                    
-                    *Code example*
-                    \`\`\`ts
-                    // example
-                    \`\`\`
-                    
-                    *Common mistakes*
-                    
-                    *Advanced insight*
-                    `
+You are a senior Angular architect mentoring a mid-level Angular developer.
+
+Give me ONE advanced Angular concept.
+
+VERY IMPORTANT:
+- You MUST fill ALL sections below.
+- Each section must contain meaningful detailed content.
+- Do NOT stop after the first section.
+- Keep response between 1500 and 2500 characters.
+- Use concise but complete explanations.
+- Use Telegram Markdown.
+- Wrap code inside triple backticks.
+- Do NOT use emojis.
+
+Structure:
+
+*Title*
+
+*Why it matters*
+- 3 to 4 bullet points
+
+*Detailed explanation*
+- 4 to 6 bullet points explaining internal behavior
+
+*Types (if any)*
+- Explain properly or say "Not applicable"
+
+*Step-by-step implementation*
+1. Step one explained
+2. Step two explained
+3. Step three explained
+
+*Code example*
+\`\`\`ts
+// realistic example
+\`\`\`
+
+*Common mistakes*
+- 3 real-world mistakes
+
+*Advanced insight*
+- Deep architectural tip
+`
+
                     
                   }
                 ]
               }
             ],
             generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 1200
-            }
+                temperature: 0.8,
+                maxOutputTokens: 1500,
+                topP: 0.95
+              }
+              
           })
         }
       );
