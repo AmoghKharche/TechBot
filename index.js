@@ -60,16 +60,22 @@ async function generateAngularConcept() {
   
   
 
-async function sendMessage(text) {
-  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: CHAT_ID,
-      text: text
-    }),
-  });
-}
+  async function sendMessage(text) {
+    const response = await fetch(
+      `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: text.substring(0, 4000) // Telegram limit
+        }),
+      }
+    );
+  
+    const data = await response.json();
+  }
+  
 
 async function main() {
   const concept = await generateAngularConcept();
