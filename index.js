@@ -15,7 +15,7 @@ async function generateAngularConcept() {
                 role: "user",
                 parts: [
                   {
-                    ttext: `
+                    text: `
                     You are a senior Angular architect teaching a mid-level Angular developer.
                     
                     Give me ONE advanced Angular concept.
@@ -75,7 +75,6 @@ async function generateAngularConcept() {
         console.error("Gemini Error:", data.error);
         return "Gemini API error.";
       }
-  
       return data.candidates?.[0]?.content?.parts?.[0]?.text 
         || "No response generated today.";
   
