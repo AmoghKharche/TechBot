@@ -136,7 +136,7 @@ You ALWAYS complete all requested sections.
             content: `
 Teach me the following advanced Angular concept:
 
-"${topic}"
+"${getNextTopic()}"
 
 Rules:
 - Must fill ALL sections.
